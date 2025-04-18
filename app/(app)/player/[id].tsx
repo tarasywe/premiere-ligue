@@ -9,6 +9,7 @@ import {
   HStack,
 } from '@gluestack-ui/themed';
 import { Image } from 'expo-image';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { SquadPlayer } from '../../../types/api';
 
 const blurhash =
@@ -34,48 +35,50 @@ export default function PlayerScreen() {
           headerBackTitle: teamName || 'Team',
         }} 
       />
-      <Box flex={1} bg="$backgroundLight0">
-        <ScrollView>
-          <VStack space="xl" p="$4">
-            <Box alignItems="center">
-              <Image
-                source={{ uri: playerData.photo }}
-                style={styles.playerPhoto}
-                placeholder={blurhash}
-                contentFit="cover"
-                transition={1000}
-              />
-              <Text size="xl" bold mt="$4">
-                {playerData.name}
-              </Text>
-              <Text size="md" color="$textLight900">
-                {playerData.position}
-              </Text>
-            </Box>
+      <SafeAreaView style={{ flex: 1 }} edges={['bottom']}>
+        <Box flex={1} bg="$backgroundLight0">
+          <ScrollView>
+            <VStack space="xl" p="$4">
+              <Box alignItems="center">
+                <Image
+                  source={{ uri: playerData.photo }}
+                  style={styles.playerPhoto}
+                  placeholder={blurhash}
+                  contentFit="cover"
+                  transition={1000}
+                />
+                <Text size="xl" bold mt="$4">
+                  {playerData.name}
+                </Text>
+                <Text size="md" color="$textLight900">
+                  {playerData.position}
+                </Text>
+              </Box>
 
-            <VStack space="md" style={styles.infoCard}>
-              <Text size="lg" bold>
-                Personal Information
-              </Text>
-              
-              <HStack justifyContent="space-between">
-                <Text color="$textLight900">Age</Text>
-                <Text>{playerData.age} years</Text>
-              </HStack>
+              <VStack space="md" style={styles.infoCard}>
+                <Text size="lg" bold>
+                  Personal Information
+                </Text>
+                
+                <HStack justifyContent="space-between">
+                  <Text color="$textLight900">Age</Text>
+                  <Text>{playerData.age} years</Text>
+                </HStack>
 
-              <HStack justifyContent="space-between">
-                <Text color="$textLight900">Squad Number</Text>
-                <Text>#{playerData.number}</Text>
-              </HStack>
+                <HStack justifyContent="space-between">
+                  <Text color="$textLight900">Squad Number</Text>
+                  <Text>#{playerData.number}</Text>
+                </HStack>
 
-              <HStack justifyContent="space-between">
-                <Text color="$textLight900">Position</Text>
-                <Text>{playerData.position}</Text>
-              </HStack>
+                <HStack justifyContent="space-between">
+                  <Text color="$textLight900">Position</Text>
+                  <Text>{playerData.position}</Text>
+                </HStack>
+              </VStack>
             </VStack>
-          </VStack>
-        </ScrollView>
-      </Box>
+          </ScrollView>
+        </Box>
+      </SafeAreaView>
     </>
   );
 }

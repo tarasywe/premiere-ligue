@@ -11,6 +11,7 @@ import {
   HStack,
 } from '@gluestack-ui/themed';
 import { Image } from 'expo-image';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { getTeamSquad } from '../../../api/football';
 import { SquadPlayer } from '../../../types/api';
 
@@ -36,51 +37,53 @@ export default function TeamScreen() {
           headerBackTitle: 'Back',
         }} 
       />
-      <Box flex={1} bg="$backgroundLight0">
-        {isLoading ? (
-          <Box flex={1} justifyContent="center" alignItems="center">
-            <Text>Loading squad information...</Text>
-          </Box>
-        ) : (
-          <ScrollView>
-            <VStack space="md" p="$4">
-              {players?.map((player) => (
-                <Pressable
-                  key={player.id}
-                  style={styles.playerCard}
-                  onPress={() => router.push({
-                    pathname: '../player/[id]',
-                    params: {
-                      id: player.id.toString(),
-                      player: JSON.stringify(player),
-                      teamName: teamName as string,
-                    },
-                  } as any)}
-                >
-                  <HStack space="md" alignItems="center">
-                    <Image
-                      source={{ uri: player.photo }}
-                      style={styles.playerPhoto}
-                      placeholder={blurhash}
-                      contentFit="cover"
-                      transition={1000}
-                    />
-                    <VStack flex={1}>
-                      <Text bold>{player.name}</Text>
-                      <Text size="sm" color="$textLight900">
-                        {player.position}
-                      </Text>
-                      <Text size="sm" color="$textLight900">
-                        Number: {player.number}
-                      </Text>
-                    </VStack>
-                  </HStack>
-                </Pressable>
-              ))}
-            </VStack>
-          </ScrollView>
-        )}
-      </Box>
+      <SafeAreaView style={{ flex: 1 }} edges={['bottom']}>
+        <Box flex={1} bg="$backgroundLight0">
+          {isLoading ? (
+            <Box flex={1} justifyContent="center" alignItems="center">
+              <Text>Loading squad information...</Text>
+            </Box>
+          ) : (
+            <ScrollView>
+              <VStack space="md" p="$4">
+                {players?.map((player) => (
+                  <Pressable
+                    key={player.id}
+                    style={styles.playerCard}
+                    onPress={() => router.push({
+                      pathname: '../player/[id]',
+                      params: {
+                        id: player.id.toString(),
+                        player: JSON.stringify(player),
+                        teamName: teamName as string,
+                      },
+                    } as any)}
+                  >
+                    <HStack space="md" alignItems="center">
+                      <Image
+                        source={{ uri: player.photo }}
+                        style={styles.playerPhoto}
+                        placeholder={blurhash}
+                        contentFit="cover"
+                        transition={1000}
+                      />
+                      <VStack flex={1}>
+                        <Text bold>{player.name}</Text>
+                        <Text size="sm" color="$textLight900">
+                          {player.position}
+                        </Text>
+                        <Text size="sm" color="$textLight900">
+                          Number: {player.number}
+                        </Text>
+                      </VStack>
+                    </HStack>
+                  </Pressable>
+                ))}
+              </VStack>
+            </ScrollView>
+          )}
+        </Box>
+      </SafeAreaView>
     </>
   );
 }

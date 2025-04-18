@@ -7,24 +7,24 @@ const queryClient = new QueryClient();
 
 export default function RootLayout() {
   return (
-    <QueryClientProvider client={queryClient}>
-      <GluestackUIProvider config={config}>
-        <Stack
-          screenOptions={{
-            headerStyle: {
-              backgroundColor: '#f5f5f5',
-            },
-            headerTintColor: '#000',
-          }}
-        >
-          <Stack.Screen
-            name="index"
-            options={{
-              title: 'Search Teams',
+      <QueryClientProvider client={queryClient}>
+        <GluestackUIProvider config={config}>
+          <Stack
+            screenOptions={{
+              headerStyle: {
+                backgroundColor: '#f5f5f5',
+              },
+              headerTintColor: '#000',
             }}
-          />
-        </Stack>
-      </GluestackUIProvider>
-    </QueryClientProvider>
+          >
+            <Stack.Screen
+              name="index"
+              options={{
+                title: 'Search Teams',
+              }}
+            />
+          </Stack>
+        </GluestackUIProvider>
+      </QueryClientProvider>
   );
 }

@@ -1,134 +1,98 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { StyleSheet } from 'react-native';
-import { useRouter } from 'expo-router';
-import { useQuery } from '@tanstack/react-query';
 import {
   Box,
   Input,
   Button,
   Text,
   VStack,
-  HStack,
-  ScrollView,
   Pressable,
-  Alert,
 } from '@gluestack-ui/themed';
-import { Image } from 'expo-image';
-import { searchTeams } from '../api/football';
-import { useSearchHistory } from '../store/searchHistory';
+import { FlashList } from '@shopify/flash-list';
+import { useSafeAreaInsets, SafeAreaView } from 'react-native-safe-area-context';
 import { Team } from '../types/api';
-
-const blurhash =
-  '|rF?hV%2WCj[ayj[a|j[az_NaeWBj@ayfRayfQfQM{M|azj[azf6fQfQfQIpWXofj[ayj[j[fQayWCoeoeaya}j[ayfQa{oLj?j[WVj[ayayj[fQoff7azayj[ayj[j[ayofayayayj[fQj[ayayj[ayfjj[j[ayjuayj[';
+import { TeamItem } from '../components/TeamItem';
+import { useSearch } from '../hooks/useSearch';
 
 export default function SearchScreen() {
-  const [query, setQuery] = useState('');
-  const [searchTerm, setSearchTerm] = useState('');
-  const router = useRouter();
-  const { history, addSearch, loadHistory } = useSearchHistory();
+  const {
+    query,
+    setQuery,
+    teams,
+    isLoading,
+    history,
+    handleSearch,
+    handleTeamPress,
+    handleHistoryItemPress,
+  } = useSearch();
+  const insets = useSafeAreaInsets();
 
-  useEffect(() => {
-    loadHistory();
-  }, []);
+  const renderTeam = ({ item }: { item: Team }) => (
+    <TeamItem team={item} onPress={() => handleTeamPress(item)} />
+  );
 
-  const { data: teams, isLoading, error } = useQuery({
-    queryKey: ['teams', searchTerm],
-    queryFn: () => searchTeams(searchTerm),
-    enabled: searchTerm.length > 2,
-    retry: false,
-  });
-
-  const handleSearch = async () => {
-    if (query.length > 2) {
-      await addSearch(query);
-      setSearchTerm(query);
+  const renderHistory = () => {
+    if (query.length === 0 && history.length > 0) {
+      return (
+        <VStack space="sm" mb="$4">
+          <Text bold>Recent Searches</Text>
+          {history.map((item) => (
+            <Pressable
+              key={item.timestamp}
+              onPress={() => handleHistoryItemPress(item.query)}
+            >
+              <Text>{item.query}</Text>
+            </Pressable>
+          ))}
+        </VStack>
+      );
     }
-  };
-
-  const handleHistoryItemPress = (historyQuery: string) => {
-    setQuery(historyQuery);
-    setSearchTerm(historyQuery);
-  };
-
-  const handleTeamPress = (team: Team) => {
-    router.push({
-      pathname: '/team/[id]',
-      params: { id: team.team.id.toString() },
-    });
+    return null;
   };
 
   return (
-    <Box flex={1} bg="$backgroundLight0">
-      <VStack space="md" p="$4">
-        <Input>
-          <Input.Input
-            placeholder="Search team (e.g., Manchester United, The Hammers)"
-            value={query}
-            onChangeText={setQuery}
-            onSubmitEditing={handleSearch}
-            returnKeyType="search"
-          />
-        </Input>
+    <SafeAreaView style={{ flex: 1 }} edges={['bottom']}>
+      <Box flex={1} bg="$backgroundLight0">
+        <VStack space="md" p="$4" pb={insets.bottom} flex={1}>
+          <Input>
+            <Input.Input
+              placeholder="Search team (e.g., Manchester United, The Hammers)"
+              value={query}
+              onChangeText={setQuery}
+            />
+          </Input>
 
-        <Button onPress={handleSearch}>
-          <Button.Text>Search</Button.Text>
-        </Button>
+          <Button onPress={handleSearch}>
+            <Button.Text>Search</Button.Text>
+          </Button>
 
-        <ScrollView>
-          {error && (
-            <Alert action="error" variant="solid" mb="$4">
-              <Alert.Text>
-                {error instanceof Error ? error.message : 'An error occurred while searching'}
-              </Alert.Text>
-            </Alert>
+          {renderHistory()}
+
+          {teams && (
+            <Box flex={1}>
+              <FlashList
+                data={teams}
+                renderItem={renderTeam}
+                estimatedItemSize={76}
+                keyExtractor={(item) => item.team.id.toString()}
+                contentContainerStyle={{ paddingBottom: insets.bottom }}
+                ListEmptyComponent={
+                  <Box flex={1} justifyContent="center" alignItems="center">
+                    <Text>No teams found</Text>
+                  </Box>
+                }
+              />
+            </Box>
           )}
-
-          {!searchTerm && history.length > 0 && (
-            <VStack space="sm">
-              <Text bold>Recent Searches</Text>
-              {history.map((item) => (
-                <Pressable
-                  key={item.timestamp}
-                  onPress={() => handleHistoryItemPress(item.query)}
-                >
-                  <Text>{item.query}</Text>
-                </Pressable>
-              ))}
-            </VStack>
-          )}
-
-          {teams?.map((team) => (
-            <Pressable
-              key={team.team.id}
-              onPress={() => handleTeamPress(team)}
-              style={styles.teamItem}
-            >
-              <HStack space="md" alignItems="center">
-                <Image
-                  source={{ uri: team.team.logo }}
-                  style={styles.teamLogo}
-                  placeholder={blurhash}
-                  contentFit="contain"
-                  transition={1000}
-                />
-                <VStack>
-                  <Text bold>{team.team.name}</Text>
-                  <Text size="sm" color="$textLight900">
-                    {team.team.country}
-                  </Text>
-                </VStack>
-              </HStack>
-            </Pressable>
-          ))}
 
           {isLoading && (
-            <Box p="$4" alignItems="center">
+            <Box flex={1} justifyContent="center" alignItems="center">
               <Text>Loading...</Text>
             </Box>
           )}
-        </ScrollView>
-      </VStack>
-    </Box>
+        </VStack>
+      </Box>
+    </SafeAreaView>
   );
 }
 

@@ -94,8 +94,7 @@ export const searchTeams = async (query: string): Promise<Team[]> => {
           },
         });
 
-        // Return first 20 teams from the response
-        return searchResponse.data.response.slice(0, 20);
+        return searchResponse.data.response;
       };
 
       return await retryWithExponentialBackoff(operation);
