@@ -5,7 +5,7 @@ private_lane :build_android_firebase do
   next unless verify(tag_prefix: "android/firebase/*")
 
   build_android
-#   post_deploy_firebase(android: true)
+  post_deploy_firebase(android: true)
 end
 
 desc "Build Android build"
