@@ -1,8 +1,11 @@
 name: Android Build to AppDistribution
 on:
-  push:
+  pull_request:
     branches:
-      - development
+      - develop
+    types:
+      - closed
+  workflow_dispatch:
 
 env:
   GITHUB_EMAIL: "makota.tv@gmail.com"
