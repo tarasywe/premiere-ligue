@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Image } from 'react-native';
 import { useLocalSearchParams, Stack } from 'expo-router';
 import {
   Box,
@@ -8,7 +8,6 @@ import {
   ScrollView,
   HStack,
 } from '@gluestack-ui/themed';
-import { Image } from 'expo-image';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { SquadPlayer } from '../../../types/api';
 
@@ -43,9 +42,6 @@ export default function PlayerScreen() {
                 <Image
                   source={{ uri: playerData.photo }}
                   style={styles.playerPhoto}
-                  placeholder={blurhash}
-                  contentFit="cover"
-                  transition={1000}
                 />
                 <Text size="xl" bold mt="$4">
                   {playerData.name}

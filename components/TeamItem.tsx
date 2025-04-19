@@ -1,51 +1,53 @@
 import React from 'react';
-import { StyleSheet } from 'react-native';
-import {
-  Text,
-  VStack,
-  HStack,
-  Pressable,
-} from '@gluestack-ui/themed';
-import { Image } from 'expo-image';
-import { Team } from '../types/api';
+import { StyleSheet, Image, Pressable } from 'react-native';
+import { Box, Text } from '@gluestack-ui/themed';
 
 const blurhash =
   '|rF?hV%2WCj[ayj[a|j[az_NaeWBj@ayfRayfQfQM{M|azj[azf6fQfQfQIpWXofj[ayj[j[fQayWCoeoeaya}j[ayfQa{oLj?j[WVj[ayayj[fQoff7azayj[ayj[j[ayofayayayj[fQj[ayayj[ayfjj[j[ayjuayj[';
 
 export type TeamItemProps = {
-  team: Team;
+  team: {
+    team: {
+      id: number;
+      name: string;
+      logo: string;
+      country: string;
+    };
+  };
   onPress: () => void;
 };
 
-export const TeamItem = ({ team, onPress }: TeamItemProps) => (
-  <Pressable
-    key={team.team.id}
-    onPress={onPress}
-    style={styles.teamItem}
-  >
-    <HStack space="md" alignItems="center">
-      <Image
-        source={{ uri: team.team.logo }}
-        style={styles.teamLogo}
-        placeholder={blurhash}
-        contentFit="contain"
-        transition={1000}
-      />
-      <VStack>
-        <Text bold>{team.team.name}</Text>
-        <Text size="sm" color="$textLight900">
-          {team.team.country}
-        </Text>
-      </VStack>
-    </HStack>
-  </Pressable>
-);
+export const TeamItem: React.FC<TeamItemProps> = ({ team, onPress }) => {
+  return (
+    <Pressable onPress={onPress}>
+      <Box style={styles.teamItem}>
+        <Image
+          source={{ uri: team.team.logo }}
+          style={styles.teamLogo}
+          resizeMode="contain"
+          accessibilityLabel={`${team.team.name} logo`}
+        />
+        <Box flex={1} ml={10}>
+          <Text size="lg" fontWeight="$bold">
+            {team.team.name}
+          </Text>
+          <Text size="sm" color="$secondary500">
+            {team.team.country}
+          </Text>
+        </Box>
+      </Box>
+    </Pressable>
+  );
+};
 
 const styles = StyleSheet.create({
   teamItem: {
-    padding: 12,
-    marginVertical: 4,
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 10,
     backgroundColor: 'white',
+    marginVertical: 4,
+    marginHorizontal: 8,
     borderRadius: 8,
     shadowColor: '#000',
     shadowOffset: {
@@ -57,7 +59,7 @@ const styles = StyleSheet.create({
     elevation: 3,
   },
   teamLogo: {
-    width: 40,
-    height: 40,
+    width: 50,
+    height: 50,
   },
 }); 

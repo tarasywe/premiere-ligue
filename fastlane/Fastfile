@@ -1,0 +1,30 @@
+fastlane_require "dotenv"
+require "spaceship"
+
+Spaceship::ConnectAPI::App.const_set("ESSENTIAL_INCLUDES", "appStoreVersions")
+
+# add --env local to run with local environment variables
+
+Dotenv.overload ".env.local" if !is_ci?
+
+# index - lanes used in CI, simplified
+import "./index.rb"
+
+# android
+import "./android/build_firebase.rb"
+import "./android/build_store.rb"
+import "./android/e2e.rb"
+import "./android/gradle_clean_build.rb"
+
+# common
+
+import "./common/increment_build.rb"
+import "./common/post_deploy_firebase.rb"
+import "./common/post_deploy_store.rb"
+import "./common/verify.rb"
+
+# ios
+import "./ios/build_firebase.rb"
+import "./ios/build_store.rb"
+import "./ios/get_ios_certificate.rb"
+import "./ios/prepare_environment.rb"

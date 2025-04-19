@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Image } from 'react-native';
 import { useLocalSearchParams, useRouter, Stack } from 'expo-router';
 import { useQuery } from '@tanstack/react-query';
 import {
@@ -10,7 +10,6 @@ import {
   Pressable,
   HStack,
 } from '@gluestack-ui/themed';
-import { Image } from 'expo-image';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { getTeamSquad } from '../../../api/football';
 import { SquadPlayer } from '../../../types/api';
@@ -63,9 +62,8 @@ export default function TeamScreen() {
                       <Image
                         source={{ uri: player.photo }}
                         style={styles.playerPhoto}
-                        placeholder={blurhash}
-                        contentFit="cover"
-                        transition={1000}
+                        resizeMode="cover"
+                        accessibilityLabel={`${player.name} photo`}
                       />
                       <VStack flex={1}>
                         <Text bold>{player.name}</Text>
