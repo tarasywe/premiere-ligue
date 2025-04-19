@@ -1,6 +1,6 @@
 import axios, { AxiosError } from 'axios';
 import { ApiResponse, Team, Player, SquadPlayer, SquadResponse } from '../types/api';
-import { API_CONFIG, LEAGUE_ID, CURRENT_SEASON } from '../config/api';
+import { API_CONFIG, CURRENT_SEASON } from '../config/api';
 
 // Queue for managing API requests
 class RequestQueue {

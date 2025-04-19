@@ -8,7 +8,8 @@
     "build:web": "expo export --platform web",
     "lint": "expo lint",
     "android": "expo run:android",
-    "ios": "expo run:ios"
+    "ios": "expo run:ios",
+    "prepare": "husky"
   },
   "dependencies": {
     "@expo/vector-icons": "^14.0.2",
@@ -57,6 +58,15 @@
     "@babel/core": "^7.25.2",
     "@react-native-community/cli": "^18.0.0",
     "@types/react": "~18.3.12",
+    "@typescript-eslint/eslint-plugin": "^8.30.1",
+    "@typescript-eslint/parser": "^8.30.1",
+    "eslint": "^9.25.0",
+    "eslint-plugin-react": "^7.37.5",
+    "eslint-plugin-react-hooks": "^5.2.0",
+    "eslint-plugin-react-native": "^5.0.0",
+    "globals": "^16.0.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^15.5.1",
     "typescript": "^5.3.3"
   }
 }

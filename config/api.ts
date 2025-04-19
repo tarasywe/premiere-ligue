@@ -6,6 +6,4 @@ export const API_CONFIG = {
   },
 } as const;
 
-// League IDs
-export const LEAGUE_ID = 39; // Premier League ID
-export const CURRENT_SEASON = 2023; // Current season 
+export const CURRENT_SEASON = 2023;

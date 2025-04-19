@@ -2,9 +2,6 @@ import React from 'react';
 import { StyleSheet, Image, Pressable } from 'react-native';
 import { Box, Text } from '@gluestack-ui/themed';
 
-const blurhash =
-  '|rF?hV%2WCj[ayj[a|j[az_NaeWBj@ayfRayfQfQM{M|azj[azf6fQfQfQIpWXofj[ayj[j[fQayWCoeoeaya}j[ayfQa{oLj?j[WVj[ayayj[fQoff7azayj[ayj[j[ayofayayayj[fQj[ayayj[ayfjj[j[ayjuayj[';
-
 export type TeamItemProps = {
   team: {
     team: {
