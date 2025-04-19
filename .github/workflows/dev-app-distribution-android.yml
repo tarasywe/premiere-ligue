@@ -1,0 +1,38 @@
+name: Android Build to AppDistribution
+on:
+  push:
+    branches:
+      - development
+
+env:
+  GITHUB_EMAIL: "makota.tv@gmail.com"
+  GITHUB_USER: "Taras Makota"
+
+jobs:
+  app-distribution-build:
+    if: github.event.pull_request.merged == true
+    name: android-distribution-build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout to git repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          ref: development
+
+      - name: Set up our JDK environment # setup JDK environment: mandatory as we need to build  android project
+        uses: actions/setup-java@v1.4.3
+        with:
+          java-version: 11
+
+      - name: Install dependencies
+        uses: ./.github/actions/install-dependencies
+
+      - name: Build and upload to AppDistribution
+        run: |
+          git config --global user.email ${{ env.GITHUB_EMAIL }}
+          git config --global user.name ${{ env.GITHUB_USER }}
+          bundle exec fastlane firebase platform:android
+        env:
+          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+          FIREBASE_ANDROID_APP_ID: ${{ secrets.FIREBASE_ANDROID_APP_ID }}
