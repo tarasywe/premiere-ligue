@@ -30,14 +30,6 @@ jobs:
           distribution: 'temurin'
           cache: gradle
 
-      - name: Setup Android SDK
-        uses: amyu/setup-android@v4
-        with:
-          sdk-version: '34'
-          build-tools-version: '34.0.0'
-          ndk-version: '25.1.8937393'
-          cache-key: 34-34.0.0-25.1.8937393--v4
-
       - name: Set JAVA_HOME to JDK 17
         shell: bash
         run: echo "JAVA_HOME=${{ steps.setup-java.outputs.java-home }}" >> $GITHUB_ENV
@@ -46,19 +38,15 @@ jobs:
         shell: bash
         run: java -version && echo "JAVA_HOME is set to $JAVA_HOME"
 
-      - name: Cache Gradle Wrapper
-        uses: actions/cache@v2
+      - name: Cache Gradle Files
+        uses: actions/cache@v3
         with:
-          path: ~/.gradle/wrapper
-          key: ${{ runner.os }}-gradle-wrapper-${{ hashFiles('gradle/wrapper/gradle-wrapper.properties') }}
-
-      - name: Cache Gradle Dependencies
-        uses: actions/cache@v2
-        with:
-          path: ~/.gradle/caches
-          key: ${{ runner.os }}-gradle-caches-${{ hashFiles('gradle/wrapper/gradle-wrapper.properties') }}
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
           restore-keys: |
-            ${{ runner.os }}-gradle-caches-
+            ${{ runner.os }}-gradle-
 
       - name: Make Gradlew Executable
         shell: bash
@@ -88,6 +76,11 @@ jobs:
           cd android && bundle install && cd ../
         env:
           CI: true
+
+      - name: Create Google Services JSON File
+        env:
+          GOOGLE_SERVICES_JSON: ${{ secrets.GOOGLE_SERVICES_JSON }}
+        run: echo $GOOGLE_SERVICES_JSON | base64 -di > ./android/app/google-services.json
 
       # Step 8: Fastlane build android
       - name : Build android App via fastlane
