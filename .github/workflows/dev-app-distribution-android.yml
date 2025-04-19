@@ -2,7 +2,7 @@ name: Android Build to AppDistribution
 on:
   pull_request:
     branches:
-      - develop
+      - development
     types:
       - closed
   workflow_dispatch:
