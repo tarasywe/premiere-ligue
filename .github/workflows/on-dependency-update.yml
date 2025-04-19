@@ -1,0 +1,23 @@
+name: On Dependency Update
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      # Run only on the default branch
+      - "develop" # or "master"
+    paths:
+      # Run only if one of these files have changed
+      - "package-lock.json"
+      - "Gemfile.lock"
+
+jobs:
+  rebuild-android-cache:
+    name: Rebuild Android Cache
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Rebuild cache
+        uses: ./.github/actions/install-dependencies
